@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Eloquent\Phpstan\Phony\Type;
 
+use Eloquent\Phony\Kahlan\Phony as KahlanPhony;
+use Eloquent\Phony\Pho\Phony as PhoPhony;
+use Eloquent\Phony\Phony;
+use Eloquent\Phony\Phpunit\Phony as PhpunitPhony;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\StaticCall;
@@ -12,28 +16,60 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\FunctionReflection;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\ParametersAcceptor;
+use PHPStan\Type\DynamicClassReturnTypeExtension;
+use PHPStan\Type\DynamicFunctionReturnTypeExtension;
+use PHPStan\Type\DynamicStaticMethodReturnTypeExtension;
 use PHPStan\Type\Type;
 
-trait MockReturnTypeTrait
+final class MockReturnType implements
+    DynamicClassReturnTypeExtension,
+    DynamicFunctionReturnTypeExtension,
+    DynamicStaticMethodReturnTypeExtension
 {
     public static function getClass(): string
     {
-        return self::FACADE_CLASS;
+        return Phony::class;
+    }
+
+    public function isClassSupported(string $class): bool
+    {
+        switch ($class) {
+            case Phony::class:
+            case PhpunitPhony::class:
+            case KahlanPhony::class:
+            case PhoPhony::class:
+                return true;
+        }
+
+        return false;
     }
 
     public function isFunctionSupported(FunctionReflection $reflection): bool
     {
-        $name = $reflection->getName();
+        switch ($reflection->getName()) {
+            case 'Eloquent\Phony\mock':
+            case 'Eloquent\Phony\partialMock':
+            case 'Eloquent\Phony\Phpunit\mock':
+            case 'Eloquent\Phony\Phpunit\partialMock':
+            case 'Eloquent\Phony\Kahlan\mock':
+            case 'Eloquent\Phony\Kahlan\partialMock':
+            case 'Eloquent\Phony\Pho\mock':
+            case 'Eloquent\Phony\Pho\partialMock':
+                return true;
+        }
 
-        return self::MOCK_FUNCTION === $name ||
-            self::PARTIAL_MOCK_FUNCTION === $name;
+        return false;
     }
 
     public function isStaticMethodSupported(MethodReflection $reflection): bool
     {
-        $name = $reflection->getName();
+        switch ($reflection->getName()) {
+            case 'mock':
+            case 'partialMock':
+                return true;
+        }
 
-        return 'mock' === $name || 'partialMock' === $name;
+        return false;
     }
 
     public function getTypeFromFunctionCall(

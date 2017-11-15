@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Eloquent\Phpstan\Phony\Type;
 
+use Eloquent\Phony\Kahlan\Phony as KahlanPhony;
+use Eloquent\Phony\Pho\Phony as PhoPhony;
+use Eloquent\Phony\Phony;
+use Eloquent\Phony\Phpunit\Phony as PhpunitPhony;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\StaticCall;
@@ -12,18 +16,45 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\FunctionReflection;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\ParametersAcceptor;
+use PHPStan\Type\DynamicClassReturnTypeExtension;
+use PHPStan\Type\DynamicFunctionReturnTypeExtension;
+use PHPStan\Type\DynamicStaticMethodReturnTypeExtension;
 use PHPStan\Type\Type;
 
-trait MockBuilderReturnTypeTrait
+final class MockBuilderReturnType implements
+    DynamicClassReturnTypeExtension,
+    DynamicFunctionReturnTypeExtension,
+    DynamicStaticMethodReturnTypeExtension
 {
     public static function getClass(): string
     {
-        return self::FACADE_CLASS;
+        return Phony::class;
+    }
+
+    public function isClassSupported(string $class): bool
+    {
+        switch ($class) {
+            case Phony::class:
+            case PhpunitPhony::class:
+            case KahlanPhony::class:
+            case PhoPhony::class:
+                return true;
+        }
+
+        return false;
     }
 
     public function isFunctionSupported(FunctionReflection $reflection): bool
     {
-        return self::MOCK_BUILDER_FUNCTION === $reflection->getName();
+        switch ($reflection->getName()) {
+            case 'Eloquent\Phony\mockBuilder':
+            case 'Eloquent\Phony\Phpunit\mockBuilder':
+            case 'Eloquent\Phony\Kahlan\mockBuilder':
+            case 'Eloquent\Phony\Pho\mockBuilder':
+                return true;
+        }
+
+        return false;
     }
 
     public function isStaticMethodSupported(MethodReflection $reflection): bool

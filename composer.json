@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=7",
-        "phpstan/phpstan": "0.9.x-dev"
+        "phpstan/phpstan": "dev-dynamic-class-return-type"
     },
     "require-dev": {
         "eloquent/phony": "^2.0",
@@ -40,5 +40,11 @@
         "platform": {
             "php": "7.0.99999"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ezzatron/phpstan"
+        }
+    ]
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "07b1d240217d585ade5b4f4ff6b4bcdd",
+    "content-hash": "ad14c335facecd4abaa5e0a25775d103",
     "packages": [
         {
             "name": "jean85/pretty-package-versions",
@@ -612,16 +612,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "dev-master",
+            "version": "dev-dynamic-class-return-type",
             "source": {
                 "type": "git",
-                "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "999d2c5304fcced7844d34f2b3102e8a296744fe"
+                "url": "https://github.com/ezzatron/phpstan.git",
+                "reference": "c527a39bef16465a39279009369e186237ce5014"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/999d2c5304fcced7844d34f2b3102e8a296744fe",
-                "reference": "999d2c5304fcced7844d34f2b3102e8a296744fe",
+                "url": "https://api.github.com/repos/ezzatron/phpstan/zipball/c527a39bef16465a39279009369e186237ce5014",
+                "reference": "c527a39bef16465a39279009369e186237ce5014",
                 "shasum": ""
             },
             "require": {
@@ -662,12 +662,19 @@
                     ]
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "classmap": [
+                    "tests/PHPStan"
+                ]
+            },
             "license": [
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2017-11-14T23:13:05+00:00"
+            "support": {
+                "source": "https://github.com/ezzatron/phpstan/tree/dynamic-class-return-type"
+            },
+            "time": "2017-11-15T11:15:01+00:00"
         },
         {
             "name": "psr/log",
